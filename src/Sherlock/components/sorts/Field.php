@@ -11,7 +11,7 @@ namespace Sherlock\components\sorts;
 use Sherlock\components;
 
 /**
- * @method \Sherlock\components\sorts\Field name() name(\string $value)
+ * @method \Sherlock\components\sorts\Field field() field(\string $value)
  * @method \Sherlock\components\sorts\Field order() order(\string $value) Default: null
  * @method \Sherlock\components\sorts\Field missing() missing(\string $value) Default: null
  * @method \Sherlock\components\sorts\Field ignore_unmapped() ignore_unmapped(\bool $value) Default: null
@@ -20,6 +20,7 @@ class Field extends components\BaseComponent implements components\SortInterface
 {
     public function __construct($hashMap = null)
     {
+        $this->params['field']           = null;
         $this->params['order']           = 'asc';
         $this->params['sort_mode']       = null;
         $this->params['missing']         = null;
@@ -41,7 +42,10 @@ class Field extends components\BaseComponent implements components\SortInterface
 
 
     public function toArray()
-    {
+	{
+		if(empty($this->params['field'])) {
+            throw new Exception('Cannot sort on field, field value not set');  
+        } 
         $ret = array(
             $this->params['field'] =>
             array(
